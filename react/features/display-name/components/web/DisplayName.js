@@ -3,13 +3,13 @@
 import React, { Component } from 'react';
 import type { Dispatch } from 'redux';
 
+import { isNameReadOnly, updateSettings } from '../../../base/config';
 import { translate } from '../../../base/i18n';
 import {
     getParticipantDisplayName,
     getParticipantById
 } from '../../../base/participants';
 import { connect } from '../../../base/redux';
-import { updateSettings } from '../../../base/settings';
 import { appendSuffix } from '../../functions';
 
 /**
@@ -24,14 +24,14 @@ type Props = {
     _configuredDisplayName: string,
 
     /**
+     * Whether or not the display name should be editable on click.
+     */
+    _readOnlyName: boolean,
+
+    /**
      * The participant's current display name which should be shown.
      */
     _nameToDisplay: string,
-
-    /**
-     * Whether or not the display name should be editable on click.
-     */
-    allowEditing: boolean,
 
     /**
      * Invoked to update the participant's display name.
@@ -144,14 +144,14 @@ class DisplayName extends Component<Props, State> {
      */
     render() {
         const {
+            _readOnlyName,
             _nameToDisplay,
-            allowEditing,
             displayNameSuffix,
             elementID,
             t
         } = this.props;
 
-        if (allowEditing && this.state.isEditing) {
+        if (!_readOnlyName && this.state.isEditing) {
             return (
                 <input
                     autoFocus = { true }
@@ -219,7 +219,7 @@ class DisplayName extends Component<Props, State> {
      * @returns {void}
      */
     _onStartEditing() {
-        if (this.props.allowEditing) {
+        if (!this.props._readOnlyName) {
             this.setState({
                 isEditing: true,
                 editDisplayNameValue: this.props._configuredDisplayName
@@ -287,6 +287,7 @@ function _mapStateToProps(state, ownProps) {
     const participant = getParticipantById(state, participantID);
 
     return {
+        _readOnlyName: isNameReadOnly(state),
         _configuredDisplayName: participant && participant.name,
         _nameToDisplay: getParticipantDisplayName(state, participantID)
     };

@@ -105,11 +105,6 @@ export type Props = {|
     _disableLocalVideoFlip: boolean,
 
     /**
-     * Indicates whether the profile functionality is disabled.
-     */
-    _disableProfile: boolean,
-
-    /**
      * The display mode of the thumbnail.
      */
     _displayMode: number,
@@ -767,7 +762,6 @@ class Thumbnail extends Component<Props, State> {
             _isMobile,
             _isScreenSharing,
             _localFlipX,
-            _disableProfile,
             _participant,
             _videoTrack
         } = this.props;
@@ -814,7 +808,6 @@ class Thumbnail extends Component<Props, State> {
                     className = 'displayNameContainer'
                     onClick = { onClick }>
                     <DisplayName
-                        allowEditing = { !_disableProfile }
                         displayNameSuffix = { _defaultLocalDisplayName }
                         elementID = 'localDisplayName'
                         participantID = { id } />
@@ -1046,7 +1039,6 @@ function _mapStateToProps(state, ownProps): Object {
     const {
         startSilent,
         disableLocalVideoFlip,
-        disableProfile,
         iAmRecorder,
         iAmSipGateway
     } = state['features/base/config'];
@@ -1098,7 +1090,6 @@ function _mapStateToProps(state, ownProps): Object {
         _currentLayout,
         _defaultLocalDisplayName: interfaceConfig.DEFAULT_LOCAL_DISPLAY_NAME,
         _disableLocalVideoFlip: Boolean(disableLocalVideoFlip),
-        _disableProfile: disableProfile,
         _isHidden: isLocal && iAmRecorder && !iAmSipGateway,
         _isAudioOnly: Boolean(state['features/base/audio-only'].enabled),
         _isCurrentlyOnLargeVideo: state['features/large-video']?.participantId === id,

@@ -45,11 +45,6 @@ export type Props = {
     _onToggleReadings: Function,
 
     /**
-     * Whether or not to block readings access with a nickname input form.
-     */
-    _showNamePrompt: boolean,
-
-    /**
      * The Redux dispatch function.
      */
     dispatch: Dispatch<any>,
@@ -101,8 +96,7 @@ export default class AbstractReadings<P: Props> extends Component<P> {
  * @private
  * @returns {{
  *     _isOpen: boolean,
- *     _messages: Array<Object>,
- *     _showNamePrompt: boolean
+ *     _messages: Array<Object>
  * }}
  */
 export function _mapStateToProps(state: Object) {
@@ -113,7 +107,6 @@ export function _mapStateToProps(state: Object) {
         _isModal: window.innerWidth <= SMALL_WIDTH_THRESHOLD,
         _isOpen: isOpen,
         _messages: messages,
-        _nbUnreadMessages: nbUnreadMessages,
-        _showNamePrompt: !_localParticipant?.name
+        _nbUnreadMessages: nbUnreadMessages
     };
 }

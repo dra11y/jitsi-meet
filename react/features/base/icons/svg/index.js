@@ -23,6 +23,7 @@ export { default as IconCameraEmptyDisabled } from './camera-empty-disabled.svg'
 export { default as IconCameraRefresh } from './camera-refresh.svg';
 export { default as IconCancelSelection } from './cancel.svg';
 export { default as IconChat } from './chat.svg';
+export { default as IconReadings } from './readings.svg';
 export { default as IconChatSend } from './send.svg';
 export { default as IconChatUnread } from './chat-unread.svg';
 export { default as IconCheck } from './check.svg';

@@ -927,6 +927,7 @@
         "chat": "Open / Close chat",
         "clap": "Clap",
         "closeChat": "Close chat",
+        "closeReadings": "Close readings",
         "closeReactionsMenu": "Close reactions menu",
         "disableReactionSounds": "You can disable reaction sounds for this meeting",
         "documentClose": "Close shared document",

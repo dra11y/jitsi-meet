@@ -74,17 +74,7 @@ MiddlewareRegistry.register(store => next => action => {
         break;
 
     case OPEN_READINGS:
-        if (navigator.product === 'ReactNative') {
-            if (localParticipant.name) {
-                dispatch(setActiveModalId(READINGS_VIEW_MODAL_ID));
-            } else {
-                dispatch(openDisplayNamePrompt(() => {
-                    dispatch(setActiveModalId(READINGS_VIEW_MODAL_ID));
-                }));
-            }
-        } else {
-            dispatch(setActiveModalId(READINGS_VIEW_MODAL_ID));
-        }
+        dispatch(setActiveModalId(READINGS_VIEW_MODAL_ID));
 
         unreadCount = 0;
 

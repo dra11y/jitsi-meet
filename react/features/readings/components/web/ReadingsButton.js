@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { translate } from '../../../base/i18n';
-import { IconChat } from '../../../base/icons';
+import { IconReadings } from '../../../base/icons';
 import { connect } from '../../../base/redux';
 import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
 
@@ -28,7 +28,7 @@ type Props = AbstractButtonProps & {
  */
 class ReadingsButton extends AbstractButton<Props, *> {
     accessibilityLabel = 'toolbar.accessibilityLabel.readings';
-    icon = IconChat;
+    icon = IconReadings;
     label = 'toolbar.openReadings';
     toggledLabel = 'toolbar.closeReadings';
 

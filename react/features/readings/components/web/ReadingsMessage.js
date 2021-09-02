@@ -63,7 +63,6 @@ class ReadingsMessage extends AbstractReadingsMessage<Props> {
                         </div>
                     </div>
                 </div>
-                { this.props.showTimestamp && this._renderTimestamp() }
             </div>
         );
     }

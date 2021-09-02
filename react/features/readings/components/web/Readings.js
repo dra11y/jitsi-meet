@@ -194,21 +194,21 @@ class Readings extends AbstractReadings<Props> {
      * @returns {ReactElement | null}
      */
     _renderPanelContent() {
-        const { _isModal, _isOpen, _showNamePrompt } = this.props;
+        const { _isModal, _isOpen } = this.props;
         let ComponentToRender = null;
 
         if (_isOpen) {
             if (_isModal) {
                 ComponentToRender = (
                     <ReadingsDialog>
-                        { _showNamePrompt ? <DisplayNameForm /> : this._renderReadings() }
+                        { this._renderReadings() }
                     </ReadingsDialog>
                 );
             } else {
                 ComponentToRender = (
                     <>
                         { this._renderReadingsHeader() }
-                        { _showNamePrompt ? <DisplayNameForm /> : this._renderReadings() }
+                        { this._renderReadings() }
                     </>
                 );
             }
@@ -224,8 +224,8 @@ class Readings extends AbstractReadings<Props> {
         return (
             <div
                 aria-haspopup = 'true'
-                className = { `sideToolbarContainer ${className}` }
-                id = 'sideToolbarContainer'
+                className = { `sideReadingsContainer ${className}` }
+                id = 'sideReadingsContainer'
                 onKeyDown = { this._onEscClick } >
                 { ComponentToRender }
             </div>

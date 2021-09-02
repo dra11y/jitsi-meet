@@ -1,7 +1,7 @@
 // @flow
 
 import { READINGS_ENABLED, getFeatureFlag } from '../../../base/flags';
-import { IconReadings, IconReadingsUnread } from '../../../base/icons';
+import { IconReadings } from '../../../base/icons';
 import { connect } from '../../../base/redux';
 import {
     AbstractButton,
@@ -27,7 +27,6 @@ class ReadingsButton extends AbstractButton<Props, *> {
     accessibilityLabel = 'toolbar.accessibilityLabel.readings';
     icon = IconReadings;
     label = 'toolbar.readings';
-    toggledIcon = IconReadingsUnread;
 
     /**
      * Handles clicking / pressing the button, and opens the appropriate dialog.

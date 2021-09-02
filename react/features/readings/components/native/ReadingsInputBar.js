@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Platform, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { translate } from '../../../base/i18n';
-import { Icon, IconReadingsSend } from '../../../base/icons';
+import { Icon, IconReadings } from '../../../base/icons';
 
 import styles from './styles';
 
@@ -90,7 +90,7 @@ class ReadingsInputBar extends Component<Props, State> {
                 {
                     this.state.showSend && <TouchableOpacity onPress = { this._onSubmit }>
                         <Icon
-                            src = { IconReadingsSend }
+                            src = { IconReadings }
                             style = { styles.sendButtonIcon } />
                     </TouchableOpacity>
                 }

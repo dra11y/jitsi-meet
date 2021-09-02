@@ -57,6 +57,8 @@ export function clearMessages() {
  * }}
  */
 export function closeReadings() {
+    document.body.classList.remove('readings')
+
     return {
         type: CLOSE_READINGS
     };

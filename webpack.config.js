@@ -51,8 +51,10 @@ function getBundleAnalyzerPlugin(name) {
 // jitsi-meet such as app.bundle.js and external_api.js.
 const config = {
     devServer: {
-        https: false,
+        https: true,
         disableHostCheck: true,
+        // public: 'dev.grushka.com',
+        public: 'localhost:8080',
         host: '0.0.0.0',
         inline: true,
         proxy: {

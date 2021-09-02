@@ -89,6 +89,7 @@ export function hideToolbox(force: boolean = false): Function {
                 && (hovered
                     || state['features/invite'].calleeInfoVisible
                     || state['features/chat'].isOpen
+                    || state['features/readings'].isOpen
                     || document.querySelector(focusSelector))) {
             dispatch(
                 setToolboxTimeout(

@@ -962,6 +962,7 @@
         "noisyAudioInputTitle": "Your microphone appears to be noisy!",
         "noisyAudioInputDesc": "It sounds like your microphone is making noise, please consider muting or changing the device.",
         "openChat": "Open chat",
+        "openReadings": "Open readings",
         "openReactionsMenu": "Open reactions menu",
         "participants": "Participants",
         "pip": "Enter Picture-in-Picture mode",

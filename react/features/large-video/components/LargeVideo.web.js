@@ -157,12 +157,13 @@ function _mapStateToProps(state) {
     const testingConfig = state['features/base/config'].testing;
     const { backgroundColor, backgroundImageUrl } = state['features/dynamic-branding'];
     const { isOpen: isChatOpen } = state['features/chat'];
+    const { isOpen: isReadingsOpen } = state['features/readings'];
 
     return {
         _backgroundAlpha: state['features/base/config'].backgroundAlpha,
         _customBackgroundColor: backgroundColor,
         _customBackgroundImageUrl: backgroundImageUrl,
-        _isChatOpen: isChatOpen,
+        _isChatOpen: isChatOpen || isReadingsOpen,
         _noAutoPlayVideo: testingConfig?.noAutoPlayVideo
     };
 }

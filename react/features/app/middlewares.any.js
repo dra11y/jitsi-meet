@@ -20,6 +20,7 @@ import '../base/tracks/middleware';
 import '../base/user-interaction/middleware';
 import '../calendar-sync/middleware';
 import '../chat/middleware';
+import '../readings/middleware';
 import '../conference/middleware';
 import '../connection-indicator/middleware';
 import '../deep-linking/middleware';

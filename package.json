@@ -46,6 +46,7 @@
     "amplitude-js": "8.2.1",
     "base64-js": "1.3.1",
     "bc-css-flags": "3.0.0",
+    "caniuse-lite": "^1.0.30001252",
     "clipboard-copy": "4.0.1",
     "dropbox": "10.7.0",
     "focus-visible": "5.1.0",

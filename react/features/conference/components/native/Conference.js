@@ -11,6 +11,7 @@ import { ASPECT_RATIO_NARROW } from '../../../base/responsive-ui/constants';
 import { TestConnectionInfo } from '../../../base/testing';
 import { ConferenceNotification, isCalendarEnabled } from '../../../calendar-sync';
 import { Chat } from '../../../chat';
+import { Readings } from '../../../readings';
 import { DisplayNameLabel } from '../../../display-name';
 import { SharedDocument } from '../../../etherpad';
 import {
@@ -226,6 +227,7 @@ class Conference extends AbstractConference<Props, *> {
         return [
             <AddPeopleDialog key = 'addPeopleDialog' />,
             <Chat key = 'chat' />,
+            <Readings key = 'readings' />,
             <SharedDocument key = 'sharedDocument' />
         ];
     }

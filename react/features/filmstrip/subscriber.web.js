@@ -65,7 +65,7 @@ StateListenerRegistry.register(
  * Listens for changes in the chat state to recompute available width.
  */
 StateListenerRegistry.register(
-    /* selector */ state => state['features/chat'].isOpen,
+    /* selector */ state => state['features/chat'].isOpen || state['features/readings'].isOpen,
     /* listener */ (isChatOpen, store) => {
         const { innerWidth, innerHeight } = window;
 

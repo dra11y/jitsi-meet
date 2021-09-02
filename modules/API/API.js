@@ -747,6 +747,21 @@ class API {
     }
 
     /**
+     * Notify external application (if API is enabled) that the readings state has been updated.
+     *
+     * @param {number} unreadCount - The unread messages counter.
+     * @param {boolean} isOpen - True if the chat panel is open.
+     * @returns {void}
+     */
+    notifyReadingsUpdated(unreadCount: number, isOpen: boolean) {
+        this._sendEvent({
+            name: 'readings-updated',
+            unreadCount,
+            isOpen
+        });
+    }
+
+    /**
      * Notify external application (if API is enabled) that message was sent.
      *
      * @param {string} message - Message body.

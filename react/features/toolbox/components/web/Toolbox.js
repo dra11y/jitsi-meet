@@ -24,7 +24,9 @@ import {
 import { connect } from '../../../base/redux';
 import { getLocalVideoTrack } from '../../../base/tracks';
 import { toggleChat } from '../../../chat';
+import { toggleReadings } from '../../../readings';
 import { ChatButton } from '../../../chat/components';
+import { ReadingsButton } from '../../../readings/components';
 import { DominantSpeakerName } from '../../../display-name';
 import { EmbedMeetingButton } from '../../../embed-meeting';
 import { SharedDocumentButton } from '../../../etherpad';
@@ -107,6 +109,11 @@ type Props = {
      * Whether or not the chat feature is currently displayed.
      */
     _chatOpen: boolean,
+
+    /**
+     * Whether or not the readings feature is currently displayed.
+     */
+    _readingsOpen: boolean,
 
     /**
      * The width of the client.
@@ -273,6 +280,7 @@ class Toolbox extends Component<Props, State> {
         this._onTabIn = this._onTabIn.bind(this);
 
         this._onShortcutToggleChat = this._onShortcutToggleChat.bind(this);
+        this._onShortcutToggleReadings = this._onShortcutToggleReadings.bind(this);
         this._onShortcutToggleFullScreen = this._onShortcutToggleFullScreen.bind(this);
         this._onShortcutToggleParticipantsPane = this._onShortcutToggleParticipantsPane.bind(this);
         this._onShortcutToggleRaiseHand = this._onShortcutToggleRaiseHand.bind(this);
@@ -281,6 +289,7 @@ class Toolbox extends Component<Props, State> {
         this._onToolbarToggleParticipantsPane = this._onToolbarToggleParticipantsPane.bind(this);
         this._onToolbarOpenVideoQuality = this._onToolbarOpenVideoQuality.bind(this);
         this._onToolbarToggleChat = this._onToolbarToggleChat.bind(this);
+        this._onToolbarToggleReadings = this._onToolbarToggleReadings.bind(this);
         this._onToolbarToggleFullScreen = this._onToolbarToggleFullScreen.bind(this);
         this._onToolbarToggleRaiseHand = this._onToolbarToggleRaiseHand.bind(this);
         this._onToolbarToggleScreenshare = this._onToolbarToggleScreenshare.bind(this);
@@ -306,6 +315,11 @@ class Toolbox extends Component<Props, State> {
                 character: 'C',
                 exec: this._onShortcutToggleChat,
                 helpDescription: 'keyboardShortcuts.toggleChat'
+            },
+            isToolbarButtonEnabled('readings', _toolbarButtons) && {
+                character: 'G',
+                exec: this._onShortcutToggleReadings,
+                helpDescription: 'keyboardShortcuts.toggleReadings'
             },
             isToolbarButtonEnabled('desktop', _toolbarButtons) && {
                 character: 'D',
@@ -450,9 +464,9 @@ class Toolbox extends Component<Props, State> {
      * @returns {ReactElement}
      */
     render() {
-        const { _chatOpen, _visible, _toolbarButtons } = this.props;
+        const { _chatOpen, _readingsOpen, _visible, _toolbarButtons } = this.props;
         const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${
-            _toolbarButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
+            _toolbarButtons.length ? '' : 'no-buttons'} ${(_chatOpen || _readingsOpen) ? 'shift-right' : ''}`;
 
         return (
             <div
@@ -508,6 +522,16 @@ class Toolbox extends Component<Props, State> {
      */
     _doToggleChat() {
         this.props.dispatch(toggleChat());
+    }
+
+    /**
+     * Dispatches an action to toggle the display of readings.
+     *
+     * @private
+     * @returns {void}
+     */
+    _doToggleReadings() {
+        this.props.dispatch(toggleReadings());
     }
 
     /**
@@ -630,6 +654,13 @@ class Toolbox extends Component<Props, State> {
             key: 'chat',
             Content: ChatButton,
             handleClick: this._onToolbarToggleChat,
+            group: 2
+        };
+
+        const readings = {
+            key: 'readings',
+            Content: ReadingsButton,
+            handleClick: this._onToolbarToggleReadings,
             group: 2
         };
 
@@ -801,6 +832,7 @@ class Toolbox extends Component<Props, State> {
             profile,
             desktop,
             chat,
+            readings,
             raisehand,
             participants,
             invite,
@@ -934,6 +966,32 @@ class Toolbox extends Component<Props, State> {
         }
 
         this._doToggleChat();
+    }
+
+    _onShortcutToggleReadings: () => void;
+
+    /**
+     * Creates an analytics keyboard shortcut event and dispatches an action for
+     * toggling the display of chat.
+     *
+     * @private
+     * @returns {void}
+     */
+     _onShortcutToggleReadings() {
+        sendAnalytics(createShortcutEvent(
+            'toggle.readings',
+            {
+                enable: !this.props._readingsOpen
+            }));
+
+        // Checks if there was any text selected by the user.
+        // Used for when we press simultaneously keys for copying
+        // text messages from the readings board
+        if (window.getSelection().toString() !== '') {
+            return false;
+        }
+
+        this._doToggleReadings();
     }
 
     _onShortcutToggleParticipantsPane: () => void;
@@ -1107,6 +1165,25 @@ class Toolbox extends Component<Props, State> {
             }));
         this._closeOverflowMenuIfOpen();
         this._doToggleChat();
+    }
+
+    _onToolbarToggleReadings: () => void;
+
+    /**
+     * Creates an analytics toolbar event and dispatches an action for toggling
+     * the display of readings.
+     *
+     * @private
+     * @returns {void}
+     */
+     _onToolbarToggleReadings() {
+        sendAnalytics(createToolbarEvent(
+            'toggle.readings',
+            {
+                enable: !this.props._readingsOpen
+            }));
+        this._closeOverflowMenuIfOpen();
+        this._doToggleReadings();
     }
 
     _onToolbarToggleFullScreen: () => void;

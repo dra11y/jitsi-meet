@@ -57,6 +57,12 @@ export const CONFERENCE_TIMER_ENABLED = 'conference-timer.enabled';
 export const CHAT_ENABLED = 'chat.enabled';
 
 /**
+ * Flag indicating if readings should be enabled.
+ * Default: enabled (true).
+ */
+export const READINGS_ENABLED = 'readings.enabled';
+
+/**
  * Flag indicating if the filmstrip should be enabled.
  * Default: enabled (true).
  */

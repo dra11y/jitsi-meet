@@ -27,6 +27,7 @@ import '../base/tracks/reducer';
 import '../base/user-interaction/reducer';
 import '../calendar-sync/reducer';
 import '../chat/reducer';
+import '../readings/reducer';
 import '../deep-linking/reducer';
 import '../dropbox/reducer';
 import '../dynamic-branding/reducer';

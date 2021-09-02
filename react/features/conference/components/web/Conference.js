@@ -11,6 +11,7 @@ import { translate } from '../../../base/i18n';
 import { connect as reactReduxConnect } from '../../../base/redux';
 import { setColorAlpha } from '../../../base/util';
 import { Chat } from '../../../chat';
+import { Readings } from '../../../readings';
 import { Filmstrip } from '../../../filmstrip';
 import { CalleeInfoContainer } from '../../../invite';
 import { LargeVideo } from '../../../large-video';
@@ -240,6 +241,7 @@ class Conference extends AbstractConference<Props, *> {
 
                     { _showPrejoin || _showLobby || <Toolbox /> }
                     <Chat />
+                    <Readings />
 
                     { this.renderNotificationsContainer() }
 

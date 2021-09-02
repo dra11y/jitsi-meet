@@ -3,6 +3,7 @@
 import type { Dispatch } from 'redux';
 
 import { CHAT_SIZE } from '../../chat/constants';
+import { READINGS_SIZE } from '../../readings/constants';
 import { getParticipantsPaneOpen } from '../../participants-pane/functions';
 import theme from '../../participants-pane/theme.json';
 
@@ -34,10 +35,15 @@ export function clientResized(clientWidth: number, clientHeight: number) {
         if (navigator.product !== 'ReactNative') {
             const state = getState();
             const { isOpen: isChatOpen } = state['features/chat'];
+            const { isOpen: isReadingsOpen } = state['features/readings'];
             const isParticipantsPaneOpen = getParticipantsPaneOpen(state);
 
             if (isChatOpen) {
                 availableWidth -= CHAT_SIZE;
+            }
+
+            if (isReadingsOpen) {
+                availableWidth -= READINGS_SIZE;
             }
 
             if (isParticipantsPaneOpen) {

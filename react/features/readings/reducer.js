@@ -3,55 +3,48 @@
 import { ReducerRegistry } from '../base/redux';
 
 import {
-    ADD_MESSAGE,
-    CLEAR_MESSAGES,
+    ADD_READING,
+    CLEAR_READINGS,
     CLOSE_READINGS,
     OPEN_READINGS
 } from './actionTypes';
 
 const DEFAULT_STATE = {
     isOpen: false,
-    lastReadMessage: undefined,
-    messages: [],
-    nbUnreadMessages: 0
+    readings: []
 };
 
 ReducerRegistry.register('features/readings', (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-    case ADD_MESSAGE: {
-        const newMessage = {
-            displayName: action.displayName,
+    case ADD_READING: {
+        const newReading = {
             error: action.error,
             id: action.id,
-            messageType: action.messageType,
-            message: action.message,
-            timestamp: action.timestamp
+            readingType: action.readingType,
+            reading: action.reading
         };
 
-        // React native, unlike web, needs a reverse sorted message list.
-        const messages = navigator.product === 'ReactNative'
+        // React native, unlike web, needs a reverse sorted reading list.
+        const readings = navigator.product === 'ReactNative'
             ? [
-                newMessage,
-                ...state.messages
+                newReading,
+                ...state.readings
             ]
             : [
-                ...state.messages,
-                newMessage
+                ...state.readings,
+                newReading
             ];
 
         return {
             ...state,
-            lastReadMessage:
-                action.hasRead ? newMessage : state.lastReadMessage,
-            messages
+            readings
         };
     }
 
-    case CLEAR_MESSAGES:
+    case CLEAR_READINGS:
         return {
             ...state,
-            lastReadMessage: undefined,
-            messages: []
+            readings: []
         };
 
     case OPEN_READINGS:
@@ -63,11 +56,10 @@ ReducerRegistry.register('features/readings', (state = DEFAULT_STATE, action) =>
     case CLOSE_READINGS:
         return {
             ...state,
-            isOpen: false,
-            lastReadMessage: state.messages[
-                navigator.product === 'ReactNative' ? 0 : state.messages.length - 1]
+            isOpen: false
         };
+
     }
 
-    return { ...state };
+    return state;
 });

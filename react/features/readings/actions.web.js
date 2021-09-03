@@ -20,8 +20,6 @@ export * from './actions.any';
  */
 export function openReadings(participant: Object) {
     return function(dispatch: (Object) => Object) {
-        document.body.classList.add('readings')
-
         dispatch({
             participant,
             type: OPEN_READINGS
@@ -35,8 +33,6 @@ export function openReadings(participant: Object) {
  * @returns {Function}
  */
 export function toggleReadings() {
-
-    console.log('toggleReadings')
     return (dispatch: Dispatch<any>, getState: Function) => {
         const isOpen = getState()['features/readings'].isOpen;
 

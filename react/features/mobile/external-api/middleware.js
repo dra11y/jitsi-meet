@@ -368,7 +368,7 @@ function _registerForNativeEvents(store) {
     eventEmitter.addListener(ExternalAPI.OPEN_READINGS, ({ to }) => {
         const participant = getParticipantById(store, to);
 
-        dispatch(openReadings(participant));
+        dispatch(openReadings());
     });
 
     eventEmitter.addListener(ExternalAPI.CLOSE_READINGS, () => {

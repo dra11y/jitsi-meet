@@ -13,6 +13,7 @@ import LargeVideoManager from './LargeVideoManager';
 import { VIDEO_CONTAINER_TYPE } from './VideoContainer';
 
 const logger = Logger.getLogger(__filename);
+
 let largeVideo;
 
 const VideoLayout = {

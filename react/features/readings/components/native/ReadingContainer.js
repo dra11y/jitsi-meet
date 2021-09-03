@@ -7,10 +7,10 @@ import { ColorSchemeRegistry } from '../../../base/color-scheme';
 import { translate } from '../../../base/i18n';
 import { connect } from '../../../base/redux';
 import { StyleType } from '../../../base/styles';
-import AbstractMessageContainer, { type Props as AbstractProps }
-    from '../AbstractMessageContainer';
+import AbstractReadingsContainer, { type Props as AbstractProps }
+    from '../AbstractReadingsContainer';
 
-import ReadingsMessageGroup from './ReadingsMessageGroup';
+import ReadingsReadingGroup from './ReadingsReadingGroup';
 import styles from './styles';
 
 type Props = AbstractProps & {
@@ -27,9 +27,9 @@ type Props = AbstractProps & {
 };
 
 /**
- * Implements a container to render all the readings messages in a conference.
+ * Implements a container to render all the readings readings in a conference.
  */
-class MessageContainer extends AbstractMessageContainer<Props> {
+class ReadingsContainer extends AbstractReadingsContainer<Props> {
     /**
      * Instantiates a new instance of the component.
      *
@@ -40,7 +40,7 @@ class MessageContainer extends AbstractMessageContainer<Props> {
 
         this._keyExtractor = this._keyExtractor.bind(this);
         this._renderListEmptyComponent = this._renderListEmptyComponent.bind(this);
-        this._renderMessageGroup = this._renderMessageGroup.bind(this);
+        this._renderReadingGroup = this._renderReadingGroup.bind(this);
     }
 
     /**
@@ -49,7 +49,7 @@ class MessageContainer extends AbstractMessageContainer<Props> {
      * @inheritdoc
      */
     render() {
-        const data = this._getMessagesGroupedBySender();
+        const data = this._getReadingsGroupedBySender();
 
         return (
             <FlatList
@@ -61,12 +61,12 @@ class MessageContainer extends AbstractMessageContainer<Props> {
                 inverted = { Boolean(data.length) }
                 keyExtractor = { this._keyExtractor }
                 keyboardShouldPersistTaps = 'always'
-                renderItem = { this._renderMessageGroup }
-                style = { styles.messageContainer } />
+                renderItem = { this._renderReadingGroup }
+                style = { styles.readingsContainer } />
         );
     }
 
-    _getMessagesGroupedBySender: () => Array<Array<Object>>;
+    _getReadingsGroupedBySender: () => Array<Array<Object>>;
 
     _keyExtractor: Object => string
 
@@ -85,7 +85,7 @@ class MessageContainer extends AbstractMessageContainer<Props> {
     _renderListEmptyComponent: () => React$Element<any>;
 
     /**
-     * Renders a message when there are no messages in the readings yet.
+     * Renders a reading when there are no readings in the readings yet.
      *
      * @returns {React$Element<any>}
      */
@@ -95,22 +95,22 @@ class MessageContainer extends AbstractMessageContainer<Props> {
         return (
             <View style = { styles.emptyComponentWrapper }>
                 <Text style = { _styles.emptyComponentText }>
-                    { t('readings.noMessagesMessage') }
+                    { t('readings.noReadingsReading') }
                 </Text>
             </View>
         );
     }
 
-    _renderMessageGroup: Object => React$Element<any>;
+    _renderReadingGroup: Object => React$Element<any>;
 
     /**
-     * Renders a single readings message.
+     * Renders a single readings reading.
      *
-     * @param {Array<Object>} messages - The readings message to render.
+     * @param {Array<Object>} readings - The readings reading to render.
      * @returns {React$Element<*>}
      */
-    _renderMessageGroup({ item: messages }) {
-        return <ReadingsMessageGroup messages = { messages } />;
+    _renderReadingGroup({ item: readings }) {
+        return <ReadingsReadingGroup readings = { readings } />;
     }
 }
 
@@ -126,4 +126,4 @@ function _mapStateToProps(state) {
     };
 }
 
-export default translate(connect(_mapStateToProps)(MessageContainer));
+export default translate(connect(_mapStateToProps)(ReadingsContainer));

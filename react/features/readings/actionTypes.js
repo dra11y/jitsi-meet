@@ -1,28 +1,28 @@
 // @flow
 
 /**
- * The type of the action which signals to add a new readings message.
+ * The type of the action which signals to add a new readings reading.
  *
  * {
- *     type: ADD_MESSAGE,
+ *     type: ADD_READING,
  *     displayName: string
  *     hasRead: boolean,
  *     id: string,
- *     messageType: string,
- *     message: string,
+ *     readingType: string,
+ *     reading: string,
  *     timestamp: string,
  * }
  */
-export const ADD_MESSAGE = 'ADD_MESSAGE';
+export const ADD_READING = 'ADD_READING';
 
 /**
- * The type of the action which signals to clear messages in Redux.
+ * The type of the action which signals to clear readings in Redux.
  *
  * {
- *     type: CLEAR_MESSAGES
+ *     type: CLEAR_READINGS
  * }
  */
-export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
+export const CLEAR_READINGS = 'CLEAR_READINGS';
 
 /**
  * The type of the action which signals the cancellation the readings panel.
@@ -43,23 +43,13 @@ export const CLOSE_READINGS = 'CLOSE_READINGS';
 export const OPEN_READINGS = 'OPEN_READINGS';
 
 /**
- * The type of the action which signals a send a readings message to everyone in the
+ * The type of the action which signals a send a readings reading to everyone in the
  * conference.
  *
  * {
- *     type: SEND_MESSAGE,
- *     message: string
+ *     type: SEND_READING,
+ *     ignorePrivacy: boolean,
+ *     reading: string
  * }
  */
-export const SEND_MESSAGE = 'SEND_MESSAGE';
-
-/**
- * The type of action which signals the initiation of sending of as private message to the
- * supplied recipient.
- *
- * {
- *     participant: Participant,
- *     type: SET_PRIVATE_MESSAGE_RECIPIENT
- * }
- */
-export const SET_PRIVATE_MESSAGE_RECIPIENT = 'SET_PRIVATE_MESSAGE_RECIPIENT';
+export const SEND_READING = 'SEND_READING';

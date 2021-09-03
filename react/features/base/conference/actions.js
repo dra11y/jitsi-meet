@@ -174,7 +174,7 @@ function _addConferenceListeners(conference, dispatch, state) {
 
     conference.on(
         JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
-        (...args) => dispatch(endpointMessageReceived(...args)));
+        (...args) => { console.log('JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED'); dispatch(endpointMessageReceived(...args)) });
 
     conference.on(
         JitsiConferenceEvents.PARTICIPANT_CONN_STATUS_CHANGED,

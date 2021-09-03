@@ -7,15 +7,17 @@ import { Button } from 'react-native-paper';
 import { translate } from '../../../base/i18n';
 import { JitsiModal } from '../../../base/modal';
 import { connect } from '../../../base/redux';
+import { PollsPane } from '../../../polls/components';
 import { closeReadings } from '../../actions.any';
-import { READINGS_VIEW_MODAL_ID } from '../../constants';
+import { BUTTON_MODES, READINGS_VIEW_MODAL_ID } from '../../constants';
 import AbstractReadings, {
     _mapStateToProps,
     type Props
 } from '../AbstractReadings';
 
 import ReadingsInputBar from './ReadingsInputBar';
-import MessageContainer from './MessageContainer';
+import ReadingsContainer from './ReadingsContainer';
+import ReadingRecipient from './ReadingRecipient';
 import styles from './styles';
 
 /**
@@ -47,13 +49,59 @@ class Readings extends AbstractReadings<Props> {
                 }}
                 modalId = { READINGS_VIEW_MODAL_ID }
                 onClose = { this._onClose }>
+                {this.props._isPollsEnabled && <View style = { styles.tabContainer }>
+                    <Button
+                        color = '#17a0db'
+                        mode = {
+                            this.props._isPollsTabFocused
+                                ? BUTTON_MODES.CONTAINED
+                                : BUTTON_MODES.TEXT
+                        }
+                        onPress = { this._onToggleReadingsTab }
+                        style = { styles.tabLeftButton }
+                        uppercase = { false }>
+                        {`${this.props.t('readings.tabs.readings')}${this.props._isPollsTabFocused
+                                && this.props._nbUnreadReadings > 0
+                            ? `(${this.props._nbUnreadReadings})`
+                            : ''
+                        }`}
+                    </Button>
+                    <Button
+                        color = '#17a0db'
+                        mode = {
+                            this.props._isPollsTabFocused
+                                ? BUTTON_MODES.TEXT
+                                : BUTTON_MODES.CONTAINED
+                        }
+                        onPress = { this._onTogglePollsTab }
+                        style = { styles.tabRightButton }
+                        uppercase = { false }>
+                        {`${this.props.t('readings.tabs.polls')}${!this.props._isPollsTabFocused
+                                && this.props._nbUnreadPolls > 0
+                            ? `(${this.props._nbUnreadPolls})`
+                            : ''
+                        }`}
+                    </Button>
+                </View>}
+                {this.props._isPollsTabFocused
+                    ? <PollsPane />
+                    : (
+                    <>
+                        <ReadingsContainer readings = { this.props._readings } />
+                        <ReadingRecipient />
+                        <ReadingsInputBar onSend = { this._onSendReading } />
+                    </>
+                    )}
             </JitsiModal>
         );
     }
 
-    _onSendMessage: (string) => void;
+    _onSendReading: (string) => void;
 
     _onClose: () => boolean
+
+    _onTogglePollsTab: () => void;
+    _onToggleReadingsTab: () => void;
 
     /**
      * Closes the modal.

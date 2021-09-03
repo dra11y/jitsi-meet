@@ -28,7 +28,7 @@ export default {
     },
 
     /**
-     * Wrapper for the details together, such as name, message and time.
+     * Wrapper for the details together, such as name, reading and time.
      */
     detailsWrapper: {
         alignItems: 'flex-start',
@@ -64,20 +64,20 @@ export default {
         height: 48
     },
 
-    messageBubble: {
+    readingBubble: {
         alignItems: 'center',
         borderRadius: BUBBLE_RADIUS,
         flexDirection: 'row'
     },
 
-    messageContainer: {
+    readingsContainer: {
         flex: 1
     },
 
     /**
      * Wrapper View for the entire block.
      */
-    messageWrapper: {
+    readingWrapper: {
         alignItems: 'flex-start',
         flex: 1,
         flexDirection: 'row',
@@ -86,9 +86,9 @@ export default {
     },
 
     /**
-     * Style modifier for the {@code detailsWrapper} for own messages.
+     * Style modifier for the {@code detailsWrapper} for own readings.
      */
-    ownMessageDetailsWrapper: {
+    ownReadingDetailsWrapper: {
         alignItems: 'flex-end'
     },
 
@@ -103,14 +103,14 @@ export default {
     },
 
     /**
-     * Style modifier for system (error) messages.
+     * Style modifier for system (error) readings.
      */
-    systemMessageBubble: {
+    systemReadingBubble: {
         backgroundColor: 'rgb(247, 215, 215)'
     },
 
     /**
-     * Wrapper for the name and the message text.
+     * Wrapper for the name and the reading text.
      */
     textWrapper: {
         alignItems: 'flex-start',
@@ -168,24 +168,24 @@ ColorSchemeRegistry.register('Readings', {
         textAlign: 'center'
     },
 
-    localMessageBubble: {
+    localReadingBubble: {
         backgroundColor: schemeColor('localMsgBackground'),
         borderTopRightRadius: 0
     },
 
-    messageRecipientCancelIcon: {
+    readingRecipientCancelIcon: {
         color: schemeColor('icon'),
         fontSize: 18
     },
 
-    messageRecipientContainer: {
+    readingRecipientContainer: {
         alignItems: 'center',
         backgroundColor: schemeColor('privateMsgBackground'),
         flexDirection: 'row',
         padding: BoxModel.padding
     },
 
-    messageRecipientText: {
+    readingRecipientText: {
         color: schemeColor('text'),
         flex: 1
     },
@@ -196,11 +196,11 @@ ColorSchemeRegistry.register('Readings', {
         marginTop: 6
     },
 
-    privateMessageBubble: {
+    privateReadingBubble: {
         backgroundColor: schemeColor('privateMsgBackground')
     },
 
-    remoteMessageBubble: {
+    remoteReadingBubble: {
         backgroundColor: schemeColor('remoteMsgBackground'),
         borderTopLeftRadius: 0
     },

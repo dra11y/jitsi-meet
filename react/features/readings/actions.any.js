@@ -1,51 +1,42 @@
 // @flow
 
 import {
-    ADD_MESSAGE,
-    CLEAR_MESSAGES,
+    ADD_READING,
+    CLEAR_READINGS,
     CLOSE_READINGS,
-    SEND_MESSAGE
+    SEND_READING
 } from './actionTypes';
 
 /**
- * Adds a readings message to the collection of messages.
+ * Adds a readings reading to the collection of readings.
  *
- * @param {Object} messageDetails - The readings message to save.
- * @param {string} messageDetails.displayName - The displayName of the
- * participant that authored the message.
- * @param {boolean} messageDetails.hasRead - Whether or not to immediately mark
- * the message as read.
- * @param {string} messageDetails.message - The received message to display.
- * @param {string} messageDetails.messageType - The kind of message, such as
+ * @param {Object} readingDetails - The readings reading to save.
+ * @param {string} readingDetails.reading - The received reading to display.
+ * @param {string} readingDetails.readingType - The kind of reading, such as
  * "error" or "local" or "remote".
- * @param {string} messageDetails.timestamp - A timestamp to display for when
- * the message was received.
  * @returns {{
- *     type: ADD_MESSAGE,
- *     displayName: string,
- *     hasRead: boolean,
- *     message: string,
- *     messageType: string,
- *     timestamp: string,
+ *     type: ADD_READING,
+ *     reading: string,
+ *     readingType: string,
  * }}
  */
-export function addMessage(messageDetails: Object) {
+export function addReading(readingDetails: Object) {
     return {
-        type: ADD_MESSAGE,
-        ...messageDetails
+        type: ADD_READING,
+        ...readingDetails
     };
 }
 
 /**
- * Clears the readings messages in Redux.
+ * Clears the readings readings in Redux.
  *
  * @returns {{
- *     type: CLEAR_MESSAGES
+ *     type: CLEAR_READINGS
  * }}
  */
-export function clearMessages() {
+export function clearReadings() {
     return {
-        type: CLEAR_MESSAGES
+        type: CLEAR_READINGS
     };
 }
 
@@ -57,25 +48,23 @@ export function clearMessages() {
  * }}
  */
 export function closeReadings() {
-    document.body.classList.remove('readings')
-
     return {
         type: CLOSE_READINGS
     };
 }
 
 /**
- * Sends a readings message to everyone in the conference.
+ * Sends a readings reading to everyone in the conference.
  *
- * @param {string} message - The readings message to send out.
+ * @param {string} reading - The readings reading to send out.
  * @returns {{
- *     type: SEND_MESSAGE,
- *     message: string
+ *     type: SEND_READING,
+ *     reading: string
  * }}
  */
-export function sendMessage(message: string) {
+export function sendReading(reading: string) {
     return {
-        type: SEND_MESSAGE,
-        message
+        type: SEND_READING,
+        reading
     };
 }

@@ -3,23 +3,23 @@
 import React, { Component } from 'react';
 import { FlatList } from 'react-native';
 
-import { MESSAGE_TYPE_LOCAL, MESSAGE_TYPE_REMOTE } from '../../constants';
+import { READING_TYPE_LOCAL, READING_TYPE_REMOTE } from '../../constants';
 
-import ReadingsMessage from './ReadingsMessage';
+import ReadingsReading from './ReadingsReading';
 import styles from './styles';
 
 type Props = {
 
   /**
-   * The messages array to render.
+   * The readings array to render.
    */
-  messages: Array<Object>
+  readings: Array<Object>
 }
 
 /**
- * Implements a container to render all the readings messages in a conference.
+ * Implements a container to render all the readings readings in a conference.
  */
-export default class ReadingsMessageGroup extends Component<Props> {
+export default class ReadingsReadingGroup extends Component<Props> {
     /**
      * Instantiates a new instance of the component.
      *
@@ -29,7 +29,7 @@ export default class ReadingsMessageGroup extends Component<Props> {
         super(props);
 
         this._keyExtractor = this._keyExtractor.bind(this);
-        this._renderMessage = this._renderMessage.bind(this);
+        this._renderReading = this._renderReading.bind(this);
     }
 
     /**
@@ -40,11 +40,11 @@ export default class ReadingsMessageGroup extends Component<Props> {
     render() {
         return (
             <FlatList
-                data = { this.props.messages }
+                data = { this.props.readings }
                 inverted = { true }
                 keyExtractor = { this._keyExtractor }
-                renderItem = { this._renderMessage }
-                style = { styles.messageContainer } />
+                renderItem = { this._renderReading }
+                style = { styles.readingsContainer } />
         );
     }
 
@@ -62,25 +62,25 @@ export default class ReadingsMessageGroup extends Component<Props> {
         return `key_${index}`;
     }
 
-    _renderMessage: Object => React$Element<*>;
+    _renderReading: Object => React$Element<*>;
 
     /**
-     * Renders a single readings message.
+     * Renders a single readings reading.
      *
-     * @param {Object} message - The readings message to render.
+     * @param {Object} reading - The readings reading to render.
      * @returns {React$Element<*>}
      */
-    _renderMessage({ index, item: message }) {
+    _renderReading({ index, item: reading }) {
         return (
-            <ReadingsMessage
-                message = { message }
+            <ReadingsReading
+                reading = { reading }
                 showAvatar = {
-                    this.props.messages[0].messageType !== MESSAGE_TYPE_LOCAL
-                        && index === this.props.messages.length - 1
+                    this.props.readings[0].readingType !== READING_TYPE_LOCAL
+                        && index === this.props.readings.length - 1
                 }
                 showDisplayName = {
-                    this.props.messages[0].messageType === MESSAGE_TYPE_REMOTE
-                        && index === this.props.messages.length - 1
+                    this.props.readings[0].readingType === READING_TYPE_REMOTE
+                        && index === this.props.readings.length - 1
                 }
                 showTimestamp = { index === 0 } />
         );

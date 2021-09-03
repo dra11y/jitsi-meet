@@ -9,25 +9,28 @@ export const READINGS_SIZE = 315;
 
 /**
  * The audio ID of the audio element for which the {@link playAudio} action is
- * triggered when new readings message is received.
+ * triggered when new readings reading is received.
  *
  * @type {string}
  */
-export const INCOMING_MSG_SOUND_ID = 'INCOMING_MSG_SOUND';
+export const INCOMING_READING_SOUND_ID = 'INCOMING_READING_SOUND';
 
 /**
- * The {@code messageType} of error (system) messages.
+ * The {@code readingType} of error (system) readings.
  */
-export const MESSAGE_TYPE_ERROR = 'error';
+export const READING_TYPE_ERROR = 'error';
 
 /**
- * The {@code messageType} of local messages.
+ * The {@code readingType} of Devotional readings.
  */
-export const MESSAGE_TYPE_LOCAL = 'local';
-
-/**
- * The {@code messageType} of remote messages.
- */
-export const MESSAGE_TYPE_REMOTE = 'remote';
+export const READING_TYPE_DEVOTIONAL = 'devotional';
 
 export const SMALL_WIDTH_THRESHOLD = 580;
+
+/**
+ * The modes of the buttons of the readings and polls tabs.
+ */
+export const BUTTON_MODES = {
+    CONTAINED: 'contained',
+    TEXT: 'text'
+};

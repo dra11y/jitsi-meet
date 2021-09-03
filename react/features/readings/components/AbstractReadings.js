@@ -3,8 +3,7 @@
 import { Component } from 'react';
 import type { Dispatch } from 'redux';
 
-import { getLocalParticipant } from '../../base/participants';
-import { sendMessage } from '../actions';
+import { sendReading } from '../actions';
 import { SMALL_WIDTH_THRESHOLD } from '../constants';
 
 /**
@@ -23,21 +22,16 @@ export type Props = {
     _isOpen: boolean,
 
     /**
-     * All the readings messages in the conference.
+     * All the readings readings in the conference.
      */
-    _messages: Array<Object>,
+    _readings: Array<Object>,
 
     /**
-     * Number of unread readings messages.
-     */
-    _nbUnreadMessages: number,
-
-    /**
-     * Function to send a text message.
+     * Function to send a text reading.
      *
      * @protected
      */
-    _onSendMessage: Function,
+    _onSendReading: Function,
 
     /**
      * Function to toggle the readings window.
@@ -70,21 +64,21 @@ export default class AbstractReadings<P: Props> extends Component<P> {
         super(props);
 
         // Bind event handlers so they are only bound once per instance.
-        this._onSendMessage = this._onSendMessage.bind(this);
+        this._onSendReading = this._onSendReading.bind(this);
     }
 
-    _onSendMessage: (string) => void;
+    _onSendReading: (string) => void;
 
     /**
-    * Sends a text message.
+    * Sends a text reading.
     *
     * @private
-    * @param {string} text - The text message to be sent.
+    * @param {string} text - The text reading to be sent.
     * @returns {void}
     * @type {Function}
     */
-    _onSendMessage(text: string) {
-        this.props.dispatch(sendMessage(text));
+    _onSendReading(text: string) {
+        this.props.dispatch(sendReading(text));
     }
 }
 
@@ -96,17 +90,16 @@ export default class AbstractReadings<P: Props> extends Component<P> {
  * @private
  * @returns {{
  *     _isOpen: boolean,
- *     _messages: Array<Object>
+ *     _readings: Array<Object>,
+ *     _showNamePrompt: boolean
  * }}
  */
 export function _mapStateToProps(state: Object) {
-    const { isOpen, messages, nbUnreadMessages } = state['features/readings'];
-    const _localParticipant = getLocalParticipant(state);
+    const { isOpen, readings } = state['features/readings'];
 
     return {
         _isModal: window.innerWidth <= SMALL_WIDTH_THRESHOLD,
         _isOpen: isOpen,
-        _messages: messages,
-        _nbUnreadMessages: nbUnreadMessages
+        _readings: readings
     };
 }

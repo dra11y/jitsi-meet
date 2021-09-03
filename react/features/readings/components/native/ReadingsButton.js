@@ -1,7 +1,7 @@
 // @flow
 
 import { READINGS_ENABLED, getFeatureFlag } from '../../../base/flags';
-import { IconReadings } from '../../../base/icons';
+import { IconReadings, IconReadingsUnread } from '../../../base/icons';
 import { connect } from '../../../base/redux';
 import {
     AbstractButton,
@@ -13,9 +13,9 @@ import { getUnreadCount } from '../../functions';
 type Props = AbstractButtonProps & {
 
     /**
-     * The unread message count.
+     * The unread reading count.
      */
-    _unreadMessageCount: number,
+    _unreadReadingCount: number,
 
     dispatch: Function
 };
@@ -27,6 +27,7 @@ class ReadingsButton extends AbstractButton<Props, *> {
     accessibilityLabel = 'toolbar.accessibilityLabel.readings';
     icon = IconReadings;
     label = 'toolbar.readings';
+    toggledIcon = IconReadingsUnread;
 
     /**
      * Handles clicking / pressing the button, and opens the appropriate dialog.
@@ -39,13 +40,13 @@ class ReadingsButton extends AbstractButton<Props, *> {
     }
 
     /**
-     * Renders the button toggled when there are unread messages.
+     * Renders the button toggled when there are unread readings.
      *
      * @protected
      * @returns {boolean}
      */
     _isToggled() {
-        return Boolean(this.props._unreadMessageCount);
+        return Boolean(this.props._unreadReadingCount);
     }
 }
 
@@ -61,7 +62,7 @@ function _mapStateToProps(state, ownProps) {
     const { visible = enabled } = ownProps;
 
     return {
-        _unreadMessageCount: getUnreadCount(state),
+        _unreadReadingCount: getUnreadCount(state),
         visible
     };
 }

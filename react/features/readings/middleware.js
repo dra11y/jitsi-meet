@@ -5,39 +5,33 @@ import {
     CONFERENCE_JOINED,
     getCurrentConference
 } from '../base/conference';
+import { openDialog } from '../base/dialog';
 import {
     JitsiConferenceErrors,
     JitsiConferenceEvents
 } from '../base/lib-jitsi-meet';
 import { setActiveModalId } from '../base/modal';
-import {
-    getLocalParticipant,
-    getParticipantById,
-    getParticipantDisplayName
-} from '../base/participants';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
 import { playSound, registerSound, unregisterSound } from '../base/sounds';
-import { openDisplayNamePrompt } from '../display-name';
-import { ADD_REACTION_MESSAGE } from '../reactions/actionTypes';
+import { endpointMessageReceived } from '../subtitles';
 import {
     showToolbox
 } from '../toolbox/actions';
 
 
-import { ADD_MESSAGE, SEND_MESSAGE, OPEN_READINGS, CLOSE_READINGS } from './actionTypes';
-import { addMessage, clearMessages } from './actions';
+import { ADD_READING, SEND_READING, OPEN_READINGS, CLOSE_READINGS } from './actionTypes';
+import { addReading, clearReadings } from './actions';
 import { closeReadings } from './actions.any';
 import {
     READINGS_VIEW_MODAL_ID,
-    INCOMING_MSG_SOUND_ID,
-    MESSAGE_TYPE_ERROR,
-    MESSAGE_TYPE_LOCAL,
-    MESSAGE_TYPE_REMOTE
+    INCOMING_READING_SOUND_ID,
+    READING_TYPE_ERROR,
+    READING_TYPE_DEVOTIONAL
 } from './constants';
-import { getUnreadCount } from './functions';
-import { INCOMING_MSG_SOUND_FILE } from './sounds';
+import { INCOMING_READING_SOUND_FILE } from './sounds';
 
 declare var APP: Object;
+declare var interfaceConfig : Object;
 
 /**
  * Implements the middleware of the readings feature.
@@ -47,26 +41,23 @@ declare var APP: Object;
  */
 MiddlewareRegistry.register(store => next => action => {
     const { dispatch, getState } = store;
-    const localParticipant = getLocalParticipant(getState());
-    let isOpen, unreadCount;
+    let isOpen;
 
     switch (action.type) {
-    case ADD_MESSAGE:
-        unreadCount = action.hasRead ? 0 : getUnreadCount(getState()) + 1;
-        isOpen = getState()['features/readings'] && getState()['features/readings'].isOpen;
+    case ADD_READING:
+        isOpen = getState()['features/readings'].isOpen;
 
-        if (typeof APP !== 'undefined') {
-            APP.API.notifyReadingsUpdated(unreadCount, isOpen);
-        }
+        // if (typeof APP !== 'undefined') {
+        //     APP.API.notifyReadingsUpdated(unreadCount, isOpen);
+        // }
         break;
 
     case APP_WILL_MOUNT:
-        dispatch(
-                registerSound(INCOMING_MSG_SOUND_ID, INCOMING_MSG_SOUND_FILE));
+        dispatch(registerSound(INCOMING_READING_SOUND_ID, INCOMING_READING_SOUND_FILE));
         break;
 
     case APP_WILL_UNMOUNT:
-        dispatch(unregisterSound(INCOMING_MSG_SOUND_ID));
+        dispatch(unregisterSound(INCOMING_READING_SOUND_ID));
         break;
 
     case CONFERENCE_JOINED:
@@ -76,41 +67,37 @@ MiddlewareRegistry.register(store => next => action => {
     case OPEN_READINGS:
         dispatch(setActiveModalId(READINGS_VIEW_MODAL_ID));
 
-        unreadCount = 0;
-
-        if (typeof APP !== 'undefined') {
-            APP.API.notifyReadingsUpdated(unreadCount, true);
-        }
+        // if (typeof APP !== 'undefined') {
+        //     APP.API.notifyReadingsUpdated(unreadCount, true);
+        // }
         break;
 
     case CLOSE_READINGS: {
-        unreadCount = 0;
-
-        if (typeof APP !== 'undefined') {
-            APP.API.notifyReadingsUpdated(unreadCount, false);
-        }
+        // if (typeof APP !== 'undefined') {
+        //     APP.API.notifyReadingsUpdated(unreadCount, false);
+        // }
 
         dispatch(setActiveModalId());
         break;
     }
 
-    case SEND_MESSAGE: {
+    case SEND_READING: {
         const state = store.getState();
         const { conference } = state['features/base/conference'];
 
         if (conference) {
-            conference.sendTextMessage(action.message);
+            // if (typeof APP !== 'undefined') {
+            //     APP.API.notifySendingReadingsReading(action.reading, Boolean(privateReadingRecipient));
+            // }
+            // conference.sendTextMessage(action.reading)
+            conference.sendMessage({
+                type: SEND_READING,
+                reading: action.reading
+            })
         }
         break;
     }
 
-    case ADD_REACTION_MESSAGE: {
-        _handleReceivedMessage(store, {
-            id: localParticipant.id,
-            message: action.message,
-            timestamp: Date.now()
-        }, false);
-    }
     }
 
     return next(action);
@@ -118,7 +105,7 @@ MiddlewareRegistry.register(store => next => action => {
 
 /**
  * Set up state change listener to perform maintenance tasks when the conference
- * is left or failed, e.g. clear messages or close the readings modal if it's left
+ * is left or failed, e.g. clear readings or close the readings modal if it's left
  * open.
  */
 StateListenerRegistry.register(
@@ -127,18 +114,18 @@ StateListenerRegistry.register(
         if (conference !== previousConference) {
             // conference changed, left or failed...
 
-            if (getState()['features/readings'] && getState()['features/readings'].isOpen) {
+            if (getState()['features/readings'].isOpen) {
                 // Closes the readings if it's left open.
                 dispatch(closeReadings());
             }
 
-            // Clear readings messages.
-            dispatch(clearMessages());
+            // Clear readings readings.
+            dispatch(clearReadings());
         }
     });
 
 StateListenerRegistry.register(
-    state => state['features/readings'] && state['features/readings'].isOpen,
+    state => state['features/readings'].isOpen,
     (isOpen, { dispatch }) => {
         if (typeof APP !== 'undefined' && isOpen) {
             dispatch(showToolbox());
@@ -163,19 +150,22 @@ function _addReadingsMsgListener(conference, store) {
     }
 
     conference.on(
-        JitsiConferenceEvents.MESSAGE_RECEIVED,
-        (id, message, timestamp) => {
-            _handleReceivedMessage(store, {
+        JitsiConferenceEvents.NON_PARTICIPANT_MESSAGE_RECEIVED,
+        (id, message) => {
+            if (message.type !== SEND_READING) return
+
+            const { type, ...reading } = message
+
+            _handleReceivedReading(store, {
                 id,
-                message,
-                timestamp
+                reading
             });
         }
     );
 
     conference.on(
         JitsiConferenceEvents.CONFERENCE_ERROR, (errorType, error) => {
-            errorType === JitsiConferenceErrors.READINGS_ERROR && _handleReadingsError(store, error);
+            errorType === JitsiConferenceErrors.MESSAGE_ERROR && _handleReadingsError(store, error);
         });
 }
 
@@ -183,28 +173,27 @@ function _addReadingsMsgListener(conference, store) {
  * Handles a readings error received from the xmpp server.
  *
  * @param {Store} store - The Redux store.
- * @param  {string} error - The error message.
+ * @param  {string} error - The error reading.
  * @returns {void}
  */
 function _handleReadingsError({ dispatch }, error) {
-    dispatch(addMessage({
+    dispatch(addReading({
         hasRead: true,
-        messageType: MESSAGE_TYPE_ERROR,
-        message: error,
-        timestamp: Date.now()
+        readingType: READING_TYPE_ERROR,
+        reading: error
     }));
 }
 
 /**
- * Function to handle an incoming readings message.
+ * Function to handle an incoming readings reading.
  *
  * @param {Store} store - The Redux store.
- * @param {Object} message - The message object.
- * @param {boolean} shouldPlaySound - Whether or not to play the incoming message sound.
+ * @param {Object} reading - The reading object.
+ * @param {boolean} shouldPlaySound - Whether or not to play the incoming reading sound.
  * @returns {void}
  */
-function _handleReceivedMessage({ dispatch, getState },
-        { id, message, timestamp },
+function _handleReceivedReading({ dispatch, getState },
+        { id, reading },
         shouldPlaySound = true
 ) {
     // Logic for all platforms:
@@ -213,31 +202,26 @@ function _handleReceivedMessage({ dispatch, getState },
     const { disableIncomingMessageSound, iAmRecorder } = state['features/base/config'];
     const { soundsIncomingMessage: soundEnabled } = state['features/base/settings'];
 
-    if (!disableIncomingMessageSound && soundEnabled && shouldPlaySound && !isReadingsOpen) {
-        dispatch(playSound(INCOMING_MSG_SOUND_ID));
-    }
+    // if (!disableIncomingMessageSound && soundEnabled && shouldPlaySound && !isReadingsOpen) {
+        dispatch(playSound(INCOMING_READING_SOUND_ID));
+    // }
 
-    // Provide a default for for the case when a message is being
-    // backfilled for a participant that has left the conference.
-    const participant = getParticipantById(state, id) || {};
-    const localParticipant = getLocalParticipant(getState);
-    const displayName = getParticipantDisplayName(state, id);
-    const hasRead = participant.local || isReadingsOpen;
-    const timestampToDate = timestamp ? new Date(timestamp) : new Date();
-    const millisecondsTimestamp = timestampToDate.getTime();
-
-    dispatch(addMessage({
-        displayName,
-        hasRead,
+    dispatch(addReading({
         id,
-        messageType: participant.local ? MESSAGE_TYPE_LOCAL : MESSAGE_TYPE_REMOTE,
-        message,
-        recipient: getParticipantDisplayName(state, localParticipant.id),
-        timestamp: millisecondsTimestamp
+        readingType: READING_TYPE_DEVOTIONAL,
+        ...reading
     }));
 
     if (typeof APP !== 'undefined') {
         // Logic for web only:
+
+        // APP.API.notifyReceivedReadingsReading({
+        //     body: reading,
+        //     id,
+        //     nick: displayName,
+        //     privateReading,
+        //     ts: timestamp
+        // });
 
         if (!iAmRecorder) {
             dispatch(showToolbox(4000));

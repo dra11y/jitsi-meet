@@ -4,14 +4,14 @@ import React, { Component } from 'react';
 import { Platform, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { translate } from '../../../base/i18n';
-import { Icon, IconReadings } from '../../../base/icons';
+import { Icon, IconReadingsSend } from '../../../base/icons';
 
 import styles from './styles';
 
 type Props = {
 
     /**
-     * Callback to invoke on message send.
+     * Callback to invoke on reading send.
      */
     onSend: Function,
 
@@ -31,7 +31,7 @@ type State = {
     /**
      * The value of the input field.
      */
-    message: string,
+    reading: string,
 
     /**
      * Boolean to show or hide the send button.
@@ -53,7 +53,7 @@ class ReadingsInputBar extends Component<Props, State> {
 
         this.state = {
             addPadding: false,
-            message: '',
+            reading: '',
             showSend: false
         };
 
@@ -86,11 +86,11 @@ class ReadingsInputBar extends Component<Props, State> {
                     ref = { this._onFieldReferenceAvailable }
                     returnKeyType = 'send'
                     style = { styles.inputField }
-                    value = { this.state.message } />
+                    value = { this.state.reading } />
                 {
                     this.state.showSend && <TouchableOpacity onPress = { this._onSubmit }>
                         <Icon
-                            src = { IconReadings }
+                            src = { IconReadingsSend }
                             style = { styles.sendButtonIcon } />
                     </TouchableOpacity>
                 }
@@ -108,7 +108,7 @@ class ReadingsInputBar extends Component<Props, State> {
      */
     _onChangeText(text) {
         this.setState({
-            message: text,
+            reading: text,
             showSend: Boolean(text)
         });
     }
@@ -149,11 +149,11 @@ class ReadingsInputBar extends Component<Props, State> {
      * @returns {void}
      */
     _onSubmit() {
-        const message = this.state.message.trim();
+        const reading = this.state.reading.trim();
 
-        message && this.props.onSend(message);
+        reading && this.props.onSend(reading);
         this.setState({
-            message: '',
+            reading: '',
             showSend: false
         });
     }

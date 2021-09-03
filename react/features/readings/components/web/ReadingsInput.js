@@ -15,7 +15,7 @@ import { connect } from '../../../base/redux';
 type Props = {
 
     /**
-     * Invoked to send readings messages.
+     * Invoked to send readings readings.
      */
     dispatch: Dispatch<any>,
 
@@ -26,7 +26,7 @@ type Props = {
     onResize: ?Function,
 
     /**
-     * Callback to invoke on message send.
+     * Callback to invoke on reading send.
      */
     onSend: Function,
 
@@ -44,12 +44,11 @@ type State = {
     /**
      * User provided nickname when the input text is provided in the view.
      */
-    message: string,
-
+    reading: string
 };
 
 /**
- * Implements a React Component for drafting and submitting a readings message.
+ * Implements a React Component for drafting and submitting a readings reading.
  *
  * @extends Component
  */
@@ -57,7 +56,7 @@ class ReadingsInput extends Component<Props, State> {
     _textArea: ?HTMLTextAreaElement;
 
     state = {
-        message: ''
+        reading: ''
     };
 
     /**
@@ -73,10 +72,9 @@ class ReadingsInput extends Component<Props, State> {
 
         // Bind event handlers so they are only bound once for every instance.
         this._onDetectSubmit = this._onDetectSubmit.bind(this);
-        this._onMessageChange = this._onMessageChange.bind(this);
-        this._onSubmitMessage = this._onSubmitMessage.bind(this);
-        this._onEscHandler = this._onEscHandler.bind(this);
-        this._onSubmitMessageKeyPress = this._onSubmitMessageKeyPress.bind(this);
+        this._onReadingChange = this._onReadingChange.bind(this);
+        this._onSubmitReading = this._onSubmitReading.bind(this);
+        this._onSubmitReadingKeyPress = this._onSubmitReadingKeyPress.bind(this);
         this._setTextAreaRef = this._setTextAreaRef.bind(this);
     }
 
@@ -100,31 +98,30 @@ class ReadingsInput extends Component<Props, State> {
      */
     render() {
         return (
-            <div className = { `readings-input-container${this.state.message.trim().length ? ' populated' : ''}` }>
+            <div className = { `readings-input-container${this.state.reading.trim().length ? ' populated' : ''}` }>
                 <div id = 'readings-input' >
-
                     <div className = 'usrmsg-form'>
                         <TextareaAutosize
                             autoComplete = 'off'
                             autoFocus = { true }
                             id = 'usermsg'
                             maxRows = { 5 }
-                            onChange = { this._onMessageChange }
+                            onChange = { this._onReadingChange }
                             onHeightChange = { this.props.onResize }
                             onKeyDown = { this._onDetectSubmit }
-                            placeholder = { this.props.t('readings.messagebox') }
+                            placeholder = { this.props.t('readings.readingbox') }
                             ref = { this._setTextAreaRef }
                             tabIndex = { 0 }
-                            value = { this.state.message } />
+                            value = { this.state.reading } />
                     </div>
                     <div className = 'send-button-container'>
                         <div
                             aria-label = { this.props.t('readings.sendButton') }
                             className = 'send-button'
-                            onClick = { this._onSubmitMessage }
-                            onKeyPress = { this._onSubmitMessageKeyPress }
+                            onClick = { this._onSubmitReading }
+                            onKeyPress = { this._onSubmitReadingKeyPress }
                             role = 'button'
-                            tabIndex = { this.state.message.trim() ? 0 : -1 } >
+                            tabIndex = { this.state.reading.trim() ? 0 : -1 } >
                             <Icon src = { IconPlane } />
                         </div>
                     </div>
@@ -144,22 +141,22 @@ class ReadingsInput extends Component<Props, State> {
     }
 
 
-    _onSubmitMessage: () => void;
+    _onSubmitReading: () => void;
 
     /**
-     * Submits the message to the readings window.
+     * Submits the reading to the readings window.
      *
      * @returns {void}
      */
-    _onSubmitMessage() {
-        const trimmed = this.state.message.trim();
+    _onSubmitReading() {
+        const trimmed = this.state.reading.trim();
 
         if (trimmed) {
             this.props.onSend(trimmed);
 
-            this.setState({ message: '' });
+            this.setState({ reading: '' });
 
-            // Keep the textarea in focus when sending messages via submit button.
+            // Keep the textarea in focus when sending readings via submit button.
             this._focus();
         }
 
@@ -167,7 +164,7 @@ class ReadingsInput extends Component<Props, State> {
     _onDetectSubmit: (Object) => void;
 
     /**
-     * Detects if enter has been pressed. If so, submit the message in the readings
+     * Detects if enter has been pressed. If so, submit the reading in the readings
      * window.
      *
      * @param {string} event - Keyboard event.
@@ -181,11 +178,11 @@ class ReadingsInput extends Component<Props, State> {
             event.preventDefault();
             event.stopPropagation();
 
-            this._onSubmitMessage();
+            this._onSubmitReading();
         }
     }
 
-    _onSubmitMessageKeyPress: (Object) => void;
+    _onSubmitReadingKeyPress: (Object) => void;
 
     /**
      * KeyPress handler for accessibility.
@@ -194,36 +191,24 @@ class ReadingsInput extends Component<Props, State> {
      *
      * @returns {void}
      */
-    _onSubmitMessageKeyPress(e) {
+    _onSubmitReadingKeyPress(e) {
         if (e.key === ' ' || e.key === 'Enter') {
             e.preventDefault();
-            this._onSubmitMessage();
+            this._onSubmitReading();
         }
     }
 
-    _onMessageChange: (Object) => void;
+    _onReadingChange: (Object) => void;
 
     /**
-     * Updates the known message the user is drafting.
+     * Updates the known reading the user is drafting.
      *
      * @param {string} event - Keyboard event.
      * @private
      * @returns {void}
      */
-    _onMessageChange(event) {
-        this.setState({ message: event.target.value });
-    }
-
-    _onEscHandler: (Object) => void;
-
-    /**
-     * KeyPress handler for accessibility.
-     *
-     * @param {Object} e - The key event to handle.
-     *
-     * @returns {void}
-     */
-    _onEscHandler(e) {
+    _onReadingChange(event) {
+        this.setState({ reading: event.target.value });
     }
 
     _setTextAreaRef: (?HTMLTextAreaElement) => void;

@@ -13,9 +13,7 @@ import AbstractReadings, {
 import ReadingsDialog from './ReadingsDialog';
 import Header from './ReadingsDialogHeader';
 import ReadingsInput from './ReadingsInput';
-import DisplayNameForm from './DisplayNameForm';
-import KeyboardAvoider from './KeyboardAvoider';
-import MessageContainer from './MessageContainer';
+import ReadingsContainer from './ReadingsContainer';
 import TouchmoveHack from './TouchmoveHack';
 
 /**
@@ -31,10 +29,10 @@ class Readings extends AbstractReadings<Props> {
     _isExited: boolean;
 
     /**
-     * Reference to the React Component for displaying readings messages. Used for
-     * scrolling to the end of the readings messages.
+     * Reference to the React Component for displaying readings readings. Used for
+     * scrolling to the end of the readings readings.
      */
-    _messageContainerRef: Object;
+    _readingsContainerRef: Object;
 
     /**
      * Initializes a new {@code Readings} instance.
@@ -46,11 +44,10 @@ class Readings extends AbstractReadings<Props> {
         super(props);
 
         this._isExited = true;
-        this._messageContainerRef = React.createRef();
+        this._readingsContainerRef = React.createRef();
 
         // Bind event handlers so they are only bound once for every instance.
         this._renderPanelContent = this._renderPanelContent.bind(this);
-        this._onReadingsInputResize = this._onReadingsInputResize.bind(this);
         this._onEscClick = this._onEscClick.bind(this);
         this._onToggleReadings = this._onToggleReadings.bind(this);
     }
@@ -61,7 +58,6 @@ class Readings extends AbstractReadings<Props> {
      * @inheritdoc
      */
     componentDidMount() {
-        this._scrollMessageContainerToBottom(true);
     }
 
     /**
@@ -70,10 +66,8 @@ class Readings extends AbstractReadings<Props> {
      * @inheritdoc
      */
     componentDidUpdate(prevProps) {
-        if (this.props._messages !== prevProps._messages) {
-            this._scrollMessageContainerToBottom(true);
+        if (this.props._readings !== prevProps._readings) {
         } else if (this.props._isOpen && !prevProps._isOpen) {
-            this._scrollMessageContainerToBottom(false);
         }
     }
     _onEscClick: (KeyboardEvent) => void;
@@ -106,22 +100,9 @@ class Readings extends AbstractReadings<Props> {
         );
     }
 
-    _onReadingsInputResize: () => void;
-
     /**
-     * Callback invoked when {@code ReadingsInput} changes height. Preserves
-     * displaying the latest message if it is scrolled to.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onReadingsInputResize() {
-        this._messageContainerRef.current.maybeUpdateBottomScroll();
-    }
-
-    /**
-     * Returns a React Element for showing readings messages and a form to send new
-     * readings messages.
+     * Returns a React Element for showing readings readings and a form to send new
+     * readings readings.
      *
      * @private
      * @returns {ReactElement}
@@ -131,41 +112,13 @@ class Readings extends AbstractReadings<Props> {
         return (
             <>
                 <TouchmoveHack isModal = { this.props._isModal }>
-                    <MessageContainer
-                        messages = { this.props._messages }
-                        ref = { this._messageContainerRef } />
+                    <ReadingsContainer
+                        readings = { this.props._readings }
+                        ref = { this._readingsContainerRef } />
                 </TouchmoveHack>
                 <ReadingsInput
-                    onResize = { this._onReadingsInputResize }
-                    onSend = { this._onSendMessage } />
-                <KeyboardAvoider />
+                    onSend = { this._onSendReading } />
             </>
-        );
-    }
-
-    /**
-     * Returns a React Element showing the Readings tab.
-     *
-     * @private
-     * @returns {ReactElement}
-     */
-    _renderTabs() {
-
-        return (
-            <div className = { 'readings-tabs-container' }>
-                <div
-                    className = { `readings-tab readings-tab-focus` }>
-                    <span className = { 'readings-tab-title' }>
-                        {this.props.t('readings.tabs.readings')}
-                    </span>
-                </div>
-                <div
-                    className = { `readings-tab` }>
-                    <span className = { 'readings-tab-title' }>
-                        delete polls tab
-                    </span>
-                </div>
-            </div>
         );
     }
 
@@ -224,29 +177,15 @@ class Readings extends AbstractReadings<Props> {
         return (
             <div
                 aria-haspopup = 'true'
-                className = { `sideReadingsContainer ${className}` }
-                id = 'sideReadingsContainer'
+                className = { `sideToolbarContainer ${className}` }
+                id = 'sideToolbarContainer'
                 onKeyDown = { this._onEscClick } >
                 { ComponentToRender }
             </div>
         );
     }
 
-    /**
-     * Scrolls the readings messages so the latest message is visible.
-     *
-     * @param {boolean} withAnimation - Whether or not to show a scrolling
-     * animation.
-     * @private
-     * @returns {void}
-     */
-    _scrollMessageContainerToBottom(withAnimation) {
-        if (this._messageContainerRef.current) {
-            this._messageContainerRef.current.scrollToBottom(withAnimation);
-        }
-    }
-
-    _onSendMessage: (string) => void;
+    _onSendReading: (string) => void;
 
     _onToggleReadings: () => void;
 

@@ -13,16 +13,16 @@ import {
 import { setActiveModalId } from '../base/modal';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
 import { playSound, registerSound, unregisterSound } from '../base/sounds';
-import { endpointMessageReceived } from '../subtitles';
 import {
     showToolbox
 } from '../toolbox/actions';
 
-
+import type { Reading } from './types';
 import { ADD_READING, SEND_READING, OPEN_READINGS, CLOSE_READINGS } from './actionTypes';
 import { addReading, clearReadings } from './actions';
 import { closeReadings } from './actions.any';
 import {
+    COMMAND_NEW_READING,
     READINGS_VIEW_MODAL_ID,
     INCOMING_READING_SOUND_ID,
     READING_TYPE_ERROR,
@@ -60,10 +60,6 @@ MiddlewareRegistry.register(store => next => action => {
         dispatch(unregisterSound(INCOMING_READING_SOUND_ID));
         break;
 
-    case CONFERENCE_JOINED:
-        _addReadingsMsgListener(action.conference, store);
-        break;
-
     case OPEN_READINGS:
         dispatch(setActiveModalId(READINGS_VIEW_MODAL_ID));
 
@@ -90,8 +86,9 @@ MiddlewareRegistry.register(store => next => action => {
             //     APP.API.notifySendingReadingsReading(action.reading, Boolean(privateReadingRecipient));
             // }
             // conference.sendTextMessage(action.reading)
+
             conference.sendMessage({
-                type: SEND_READING,
+                type: COMMAND_NEW_READING,
                 reading: action.reading
             })
         }
@@ -112,6 +109,27 @@ StateListenerRegistry.register(
     state => getCurrentConference(state),
     (conference, { dispatch, getState }, previousConference) => {
         if (conference !== previousConference) {
+
+            const receiveMessage = (_, data) => {
+                switch (data.type) {
+                case COMMAND_NEW_READING: {
+                    const { reading } = data;
+
+                    dispatch(addReading(reading));
+                    // dispatch(showNotification({
+                    //     appearance: NOTIFICATION_TYPE.NORMAL,
+                    //     titleKey: 'readings.notification.title',
+                    //     descriptionKey: 'readings.notification.description'
+                    // }, NOTIFICATION_TIMEOUT));
+                    break;
+
+                }
+                }
+            };
+
+            conference.on(JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED, receiveMessage);
+            conference.on(JitsiConferenceEvents.NON_PARTICIPANT_MESSAGE_RECEIVED, receiveMessage);
+
             // conference changed, left or failed...
 
             if (getState()['features/readings'].isOpen) {
@@ -132,100 +150,3 @@ StateListenerRegistry.register(
         }
     }
 );
-
-/**
- * Registers listener for {@link JitsiConferenceEvents.MESSAGE_RECEIVED} that
- * will perform various readings related activities.
- *
- * @param {JitsiConference} conference - The conference instance on which the
- * new event listener will be registered.
- * @param {Object} store - The redux store object.
- * @private
- * @returns {void}
- */
-function _addReadingsMsgListener(conference, store) {
-    if (store.getState()['features/base/config'].iAmRecorder) {
-        // We don't register anything on web if we are in iAmRecorder mode
-        return;
-    }
-
-    conference.on(
-        JitsiConferenceEvents.NON_PARTICIPANT_MESSAGE_RECEIVED,
-        (id, message) => {
-            if (message.type !== SEND_READING) return
-
-            const { type, ...reading } = message
-
-            _handleReceivedReading(store, {
-                id,
-                reading
-            });
-        }
-    );
-
-    conference.on(
-        JitsiConferenceEvents.CONFERENCE_ERROR, (errorType, error) => {
-            errorType === JitsiConferenceErrors.MESSAGE_ERROR && _handleReadingsError(store, error);
-        });
-}
-
-/**
- * Handles a readings error received from the xmpp server.
- *
- * @param {Store} store - The Redux store.
- * @param  {string} error - The error reading.
- * @returns {void}
- */
-function _handleReadingsError({ dispatch }, error) {
-    dispatch(addReading({
-        hasRead: true,
-        readingType: READING_TYPE_ERROR,
-        reading: error
-    }));
-}
-
-/**
- * Function to handle an incoming readings reading.
- *
- * @param {Store} store - The Redux store.
- * @param {Object} reading - The reading object.
- * @param {boolean} shouldPlaySound - Whether or not to play the incoming reading sound.
- * @returns {void}
- */
-function _handleReceivedReading({ dispatch, getState },
-        { id, reading },
-        shouldPlaySound = true
-) {
-    // Logic for all platforms:
-    const state = getState();
-    const { isOpen: isReadingsOpen } = state['features/readings'];
-    const { disableIncomingMessageSound, iAmRecorder } = state['features/base/config'];
-    const { soundsIncomingMessage: soundEnabled } = state['features/base/settings'];
-
-    // if (!disableIncomingMessageSound && soundEnabled && shouldPlaySound && !isReadingsOpen) {
-        dispatch(playSound(INCOMING_READING_SOUND_ID));
-    // }
-
-    dispatch(addReading({
-        id,
-        readingType: READING_TYPE_DEVOTIONAL,
-        ...reading
-    }));
-
-    if (typeof APP !== 'undefined') {
-        // Logic for web only:
-
-        // APP.API.notifyReceivedReadingsReading({
-        //     body: reading,
-        //     id,
-        //     nick: displayName,
-        //     privateReading,
-        //     ts: timestamp
-        // });
-
-        if (!iAmRecorder) {
-            dispatch(showToolbox(4000));
-        }
-
-    }
-}

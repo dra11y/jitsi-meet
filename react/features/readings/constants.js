@@ -1,5 +1,7 @@
 // @flow
 
+export const COMMAND_NEW_READING = 'new-reading';
+
 export const READINGS_VIEW_MODAL_ID = 'readingsView';
 
 /**

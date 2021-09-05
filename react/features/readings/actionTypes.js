@@ -5,12 +5,7 @@
  *
  * {
  *     type: ADD_READING,
- *     displayName: string
- *     hasRead: boolean,
- *     id: string,
- *     readingType: string,
- *     reading: string,
- *     timestamp: string,
+ *     reading: Reading,
  * }
  */
 export const ADD_READING = 'ADD_READING';
@@ -48,8 +43,7 @@ export const OPEN_READINGS = 'OPEN_READINGS';
  *
  * {
  *     type: SEND_READING,
- *     ignorePrivacy: boolean,
- *     reading: string
+ *     reading: Reading
  * }
  */
 export const SEND_READING = 'SEND_READING';

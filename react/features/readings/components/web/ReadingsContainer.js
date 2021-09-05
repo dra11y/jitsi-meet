@@ -56,6 +56,8 @@ export default class ReadingsContainer extends AbstractReadingsContainer<Props> 
      * @inheritdoc
      */
     render() {
+        console.log('rendering readings...')
+
         const readings = this._getOrderedReadings().map((reading, index) => {
             const readingType = reading.readingType;
             return (
@@ -73,7 +75,8 @@ export default class ReadingsContainer extends AbstractReadingsContainer<Props> 
                 // ref = { this._readingListRef }
                 role = 'log'
                 tabIndex = { 0 }>
-                { readings }
+                    readings should show up here:
+                    { readings }
                 {/* <div ref = { this._readingsListEndRef } /> */}
             </div>
         );

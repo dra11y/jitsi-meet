@@ -3,6 +3,7 @@
 import { PureComponent } from 'react';
 
 import { READING_TYPE_ERROR, READING_TYPE_DEVOTIONAL } from '../constants';
+import type { Reading } from '../types'
 
 /**
  * The type of the React {@code Component} props of {@code AbstractReadingsReading}.
@@ -12,7 +13,7 @@ export type Props = {
     /**
      * The representation of a readings reading.
      */
-    reading: Object,
+    reading: Reading,
 
     /**
      * Invoked to receive translated strings.
@@ -34,8 +35,8 @@ export default class AbstractReadingsReading<P: Props> extends PureComponent<P> 
 
         return reading.readingType === READING_TYPE_ERROR
             ? this.props.t('readings.error', {
-                error: reading.reading
+                error: reading.body
             })
-            : reading.reading;
+            : reading.body;
     }
 }

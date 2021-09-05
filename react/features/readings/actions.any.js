@@ -6,6 +6,7 @@ import {
     CLOSE_READINGS,
     SEND_READING
 } from './actionTypes';
+import type { Reading } from './types';
 
 /**
  * Adds a readings reading to the collection of readings.
@@ -16,14 +17,13 @@ import {
  * "error" or "local" or "remote".
  * @returns {{
  *     type: ADD_READING,
- *     reading: string,
- *     readingType: string,
+ *     reading: Reading,
  * }}
  */
-export function addReading(readingDetails: Object) {
+export function addReading(reading: Reading) {
     return {
         type: ADD_READING,
-        ...readingDetails
+        reading
     };
 }
 
@@ -59,10 +59,10 @@ export function closeReadings() {
  * @param {string} reading - The readings reading to send out.
  * @returns {{
  *     type: SEND_READING,
- *     reading: string
+ *     reading: Reading
  * }}
  */
-export function sendReading(reading: string) {
+export function sendReading(reading: Reading) {
     return {
         type: SEND_READING,
         reading

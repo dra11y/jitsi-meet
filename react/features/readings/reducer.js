@@ -17,12 +17,7 @@ const DEFAULT_STATE = {
 ReducerRegistry.register('features/readings', (state = DEFAULT_STATE, action) => {
     switch (action.type) {
     case ADD_READING: {
-        const newReading = {
-            error: action.error,
-            id: action.id,
-            readingType: action.readingType,
-            reading: action.reading
-        };
+        const newReading = action.reading;
 
         // React native, unlike web, needs a reverse sorted reading list.
         const readings = navigator.product === 'ReactNative'

@@ -3,8 +3,9 @@
 import { Component } from 'react';
 import type { Dispatch } from 'redux';
 
+import type { Reading } from '../types';
 import { sendReading } from '../actions';
-import { SMALL_WIDTH_THRESHOLD } from '../constants';
+import { SMALL_WIDTH_THRESHOLD, READING_TYPE_DEVOTIONAL } from '../constants';
 
 /**
  * The type of the React {@code Component} props of {@code AbstractReadings}.
@@ -73,12 +74,21 @@ export default class AbstractReadings<P: Props> extends Component<P> {
     * Sends a text reading.
     *
     * @private
-    * @param {string} text - The text reading to be sent.
+    * @param {string} text - The reading text to be sent.
     * @returns {void}
     * @type {Function}
     */
     _onSendReading(text: string) {
-        this.props.dispatch(sendReading(text));
+        const reading: Reading = {
+            readingType: READING_TYPE_DEVOTIONAL,
+            id: Math.ceil(Math.random() * 100000000).toString(),
+            order: 1,
+            body: text
+        }
+
+        console.log(reading)
+
+        this.props.dispatch(sendReading(reading));
     }
 }
 

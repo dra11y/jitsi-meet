@@ -1,24 +1,11 @@
 // @flow
 
-export type Reading = {
+export const READING_TYPE_ERROR = 'error';
+export const READING_TYPE_DEVOTIONAL = 'devotional';
 
-    /**
-     * unique ID of this reading
-     */
+export interface Reading {
     id: string,
-
-    /**
-     * The sort order of this reading
-     */
     order: number,
-
-    /**
-     * The type of this reading
-     */
     readingType: string,
-
-    /**
-     * The text of this reading
-     */
     body: string,
 };

@@ -2,12 +2,7 @@
 
 import { ReducerRegistry } from '../base/redux';
 
-import {
-    ADD_READING,
-    CLEAR_READINGS,
-    CLOSE_READINGS,
-    OPEN_READINGS
-} from './actionTypes';
+import { SET_CURRENT_READING, RECEIVE_READING, CLOSE_READINGS, OPEN_READINGS } from './actions';
 
 const DEFAULT_STATE = {
     isOpen: false,
@@ -16,18 +11,18 @@ const DEFAULT_STATE = {
 
 ReducerRegistry.register('features/readings', (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-    case ADD_READING: {
-        const newReading = action.reading;
+    case RECEIVE_READING: {
+        const receivedReading = action.reading;
 
         // React native, unlike web, needs a reverse sorted reading list.
         const readings = navigator.product === 'ReactNative'
             ? [
-                newReading,
+                receivedReading,
                 ...state.readings
             ]
             : [
                 ...state.readings,
-                newReading
+                receivedReading
             ];
 
         return {
@@ -36,10 +31,10 @@ ReducerRegistry.register('features/readings', (state = DEFAULT_STATE, action) =>
         };
     }
 
-    case CLEAR_READINGS:
+    case SET_CURRENT_READING:
         return {
             ...state,
-            readings: []
+            currentReading: action.index
         };
 
     case OPEN_READINGS:

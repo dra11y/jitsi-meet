@@ -1,56 +1,33 @@
 // @flow
 
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app';
-import {
-    CONFERENCE_JOINED,
-    getCurrentConference
-} from '../base/conference';
+import { CONFERENCE_JOINED, getCurrentConference } from '../base/conference';
 import { openDialog } from '../base/dialog';
-import {
-    JitsiConferenceErrors,
-    JitsiConferenceEvents
-} from '../base/lib-jitsi-meet';
+import { JitsiConferenceErrors, JitsiConferenceEvents } from '../base/lib-jitsi-meet';
 import { setActiveModalId } from '../base/modal';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
 import { playSound, registerSound, unregisterSound } from '../base/sounds';
-import {
-    showToolbox
-} from '../toolbox/actions';
+import { showToolbox } from '../toolbox/actions';
 
-import type { Reading } from './types';
-import { ADD_READING, SEND_READING, OPEN_READINGS, CLOSE_READINGS } from './actionTypes';
-import { addReading, clearReadings } from './actions';
-import { closeReadings } from './actions.any';
-import {
-    COMMAND_NEW_READING,
-    READINGS_VIEW_MODAL_ID,
-    INCOMING_READING_SOUND_ID,
-    READING_TYPE_ERROR,
-    READING_TYPE_DEVOTIONAL
-} from './constants';
-import { INCOMING_READING_SOUND_FILE } from './sounds';
+import { Reading, READING_TYPE_ERROR, READING_TYPE_DEVOTIONAL } from './types';
+import { receiveReading, closeReadings, CREATE_READING, SEND_READING, RECEIVE_READING, OPEN_READINGS, CLOSE_READINGS } from './actions';
+import { READINGS_VIEW_MODAL_ID, INCOMING_READING_SOUND_ID, INCOMING_READING_SOUND_FILE } from './constants';
 
 declare var APP: Object;
 declare var interfaceConfig : Object;
 
-/**
- * Implements the middleware of the readings feature.
- *
- * @param {Store} store - The redux store.
- * @returns {Function}
- */
 MiddlewareRegistry.register(store => next => action => {
     const { dispatch, getState } = store;
     let isOpen;
 
     switch (action.type) {
-    case ADD_READING:
-        isOpen = getState()['features/readings'].isOpen;
+    // case ADD_READING:
+    //     isOpen = getState()['features/readings'].isOpen;
 
-        // if (typeof APP !== 'undefined') {
-        //     APP.API.notifyReadingsUpdated(unreadCount, isOpen);
-        // }
-        break;
+    //     // if (typeof APP !== 'undefined') {
+    //     //     APP.API.notifyReadingsUpdated(unreadCount, isOpen);
+    //     // }
+    //     break;
 
     case APP_WILL_MOUNT:
         dispatch(registerSound(INCOMING_READING_SOUND_ID, INCOMING_READING_SOUND_FILE));
@@ -88,7 +65,7 @@ MiddlewareRegistry.register(store => next => action => {
             // conference.sendTextMessage(action.reading)
 
             conference.sendMessage({
-                type: COMMAND_NEW_READING,
+                type: RECEIVE_READING,
                 reading: action.reading
             })
         }
@@ -112,10 +89,10 @@ StateListenerRegistry.register(
 
             const receiveMessage = (_, data) => {
                 switch (data.type) {
-                case COMMAND_NEW_READING: {
+                case RECEIVE_READING: {
                     const { reading } = data;
 
-                    dispatch(addReading(reading));
+                    dispatch(receiveReading(reading));
                     // dispatch(showNotification({
                     //     appearance: NOTIFICATION_TYPE.NORMAL,
                     //     titleKey: 'readings.notification.title',
@@ -129,16 +106,6 @@ StateListenerRegistry.register(
 
             conference.on(JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED, receiveMessage);
             conference.on(JitsiConferenceEvents.NON_PARTICIPANT_MESSAGE_RECEIVED, receiveMessage);
-
-            // conference changed, left or failed...
-
-            if (getState()['features/readings'].isOpen) {
-                // Closes the readings if it's left open.
-                dispatch(closeReadings());
-            }
-
-            // Clear readings readings.
-            dispatch(clearReadings());
         }
     });
 

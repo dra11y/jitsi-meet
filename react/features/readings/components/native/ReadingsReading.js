@@ -9,8 +9,7 @@ import { translate } from '../../../base/i18n';
 import { Linkify } from '../../../base/react';
 import { connect } from '../../../base/redux';
 import { type StyleType } from '../../../base/styles';
-import { READING_TYPE_ERROR, READING_TYPE_LOCAL } from '../../constants';
-import { replaceNonUnicodeEmojis } from '../../functions';
+import { READING_TYPE_ERROR, READING_TYPE_DEVOTIONAL } from '../../types';
 import AbstractReadingsReading, { type Props as AbstractProps } from '../AbstractReadingsReading';
 import PrivateReadingButton from '../PrivateReadingButton';
 

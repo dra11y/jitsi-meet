@@ -7,8 +7,7 @@ import {
     AbstractButton,
     type AbstractButtonProps
 } from '../../../base/toolbox/components';
-import { openReadings } from '../../actions.native';
-import { getUnreadCount } from '../../functions';
+import { openReadings } from '../../actions';
 
 type Props = AbstractButtonProps & {
 

@@ -4,7 +4,7 @@ import React from 'react';
 
 import { translate } from '../../../base/i18n';
 import { connect } from '../../../base/redux';
-import { toggleReadings } from '../../actions.web';
+import { toggleReadings } from '../../actions';
 import AbstractReadings, {
     _mapStateToProps,
     type Props

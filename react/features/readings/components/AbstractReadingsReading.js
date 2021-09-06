@@ -2,8 +2,8 @@
 
 import { PureComponent } from 'react';
 
-import { READING_TYPE_ERROR, READING_TYPE_DEVOTIONAL } from '../constants';
-import type { Reading } from '../types'
+import { READING_TYPE_ERROR, READING_TYPE_DEVOTIONAL } from '../types';
+import { Reading } from '../types'
 
 /**
  * The type of the React {@code Component} props of {@code AbstractReadingsReading}.

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { FlatList } from 'react-native';
 
-import { READING_TYPE_LOCAL, READING_TYPE_REMOTE } from '../../constants';
+import { READING_TYPE_ERROR, READING_TYPE_DEVOTIONAL } from '../../types';
 
 import ReadingsReading from './ReadingsReading';
 import styles from './styles';
